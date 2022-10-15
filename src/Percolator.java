@@ -5,7 +5,9 @@ import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -16,7 +18,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-//This probably wont run with default stack size i used -Xss1G but i think it only uses ~250mb at normal size
 public class Percolator {
 	
 	public static void main(String[] args) {
@@ -67,24 +68,28 @@ public class Percolator {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				double p = (double)slider.getValue()/(slider.getMaximum()-slider.getMinimum());
+				System.out.println(p);
 				boolean check[] = new boolean[width*height];
 				int[] pixels = ((DataBufferInt)img.getRaster().getDataBuffer()).getData();
 				rand.setSeed(colorSeed);
-				for(int i = 0; i < width; i++)
-					for(int j = 0; j < height; j++)
-						color(i, j, p, pixels, check, rand.nextInt(0xFFFFFF)+1);
+				for(int i = 0; i < width*height; i++)
+						if(!check[i]) {
+							Deque<Integer> stack = new LinkedList<>();
+							int color = rand.nextInt(0xFFFFFF)+1;
+							stack.push(i);
+							while(!stack.isEmpty()) {
+								int n = stack.pop();
+								pixels[n] = color;
+								check[n] = true;
+								double arr[] = edges[n];
+								for(int j = 0; j < 4; j++) {
+									int next = n+((j-1)%2)+width*((j-2)%2);
+									if(next >= 0 && next < pixels.length && !check[next] && arr[j] < p)
+										stack.push(next);
+								}
+							}
+						}
 				panel.repaint();
-			}
-			
-			private void color(int x, int y, double p, int[] pixels, boolean[] check, int color) {
-				if(x < 0 || x >= width || y < 0 || y >= height || check[x+y*width])
-					return;
-				pixels[x+y*width] = color;
-				check[x+y*width] = true;
-				double arr[] = edges[x+y*width];
-				for(int i = 0; i < 4; i++)
-					if(arr[i] < p)
-						color(x-(i-1)%2, y-(i-2)%2, p, pixels, check, color);
 			}
 		});
 		slider.getChangeListeners()[0].stateChanged(null);
