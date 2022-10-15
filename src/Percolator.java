@@ -68,7 +68,6 @@ public class Percolator {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				double p = (double) slider.getValue() / (slider.getMaximum() - slider.getMinimum());
-				System.out.println(p);
 				boolean check[] = new boolean[width * height];
 				int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
 				rand.setSeed(colorSeed);
