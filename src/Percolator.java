@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+//This probably wont run with default stack size i used -Xss1G but i think it only uses ~250mb at normal size
 public class Percolator {
 	
 	public static void main(String[] args) {
