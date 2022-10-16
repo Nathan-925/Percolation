@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,6 +46,7 @@ public class Percolator {
 		slider.setMajorTickSpacing(100);
 		slider.setMinorTickSpacing(10);
 		slider.setPaintTicks(true);
+		slider.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 5));
 
 		JFrame frame = new JFrame("Percolation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,7 +76,7 @@ public class Percolator {
 				for (int i = 0; i < width * height; i++)
 					if (!check[i]) {
 						Deque<Integer> stack = new LinkedList<>();
-						int color = rand.nextInt(0xFFFFFF) + 1;
+						int color = rand.nextInt(0x1000000);
 						stack.push(i);
 						while (!stack.isEmpty()) {
 							int n = stack.pop();
