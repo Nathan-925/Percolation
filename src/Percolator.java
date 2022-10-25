@@ -24,7 +24,6 @@ public class Percolator {
 		int width = args.length >= 2 ? Integer.parseInt(args[0]) : 800,
 				height = args.length >= 2 ? Integer.parseInt(args[1]) : 600;
 		Random rand = args.length >= 3 ? new Random(Long.parseLong(args[2])) : new Random();
-		long colorSeed = rand.nextLong();
 		double edges[][] = new double[width * height][4];
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
@@ -35,6 +34,10 @@ public class Percolator {
 				if (j > 0)
 					edges[i + (j - 1) * width][3] = edges[i + j * width][1];
 			}
+		
+		int colors[] = new int[edges.length];
+		for(int i = 0; i < colors.length; i++)
+		    colors[i] = rand.nextInt(0x1000000);
 
 		JSlider slider = new JSlider(SwingConstants.VERTICAL, 0, 1000, 0);
 		Hashtable<Integer, JLabel> dic = new Hashtable<>();
@@ -72,15 +75,13 @@ public class Percolator {
 				double p = (double) slider.getValue() / (slider.getMaximum() - slider.getMinimum());
 				boolean check[] = new boolean[width * height];
 				int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
-				rand.setSeed(colorSeed);
 				for (int i = 0; i < width * height; i++)
 					if (!check[i]) {
 						Deque<Integer> stack = new LinkedList<>();
-						int color = rand.nextInt(0x1000000);
 						stack.push(i);
 						while (!stack.isEmpty()) {
 							int n = stack.pop();
-							pixels[n] = color;
+							pixels[n] = colors[i];
 							check[n] = true;
 							double arr[] = edges[n];
 							for (int j = 0; j < 4; j++) {
