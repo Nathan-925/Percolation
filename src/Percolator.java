@@ -8,7 +8,6 @@ import java.util.Deque;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Random;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,15 +23,16 @@ public class Percolator {
 		int width = args.length >= 2 ? Integer.parseInt(args[0]) : 800,
 				height = args.length >= 2 ? Integer.parseInt(args[1]) : 600;
 		Random rand = args.length >= 3 ? new Random(Long.parseLong(args[2])) : new Random();
+		
 		double edges[][] = new double[width * height][4];
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
 				edges[i + j * width][0] = rand.nextDouble();
-				if (i > 0)
-					edges[i - 1 + j * width][2] = edges[i + j * width][0];
+				if (i < width-1)
+					edges[i + 1 + j * width][2] = edges[i + j * width][0];
 				edges[i + j * width][1] = rand.nextDouble();
-				if (j > 0)
-					edges[i + (j - 1) * width][3] = edges[i + j * width][1];
+				if (j < height-1)
+					edges[i + (j + 1) * width][3] = edges[i + j * width][1];
 			}
 		
 		int colors[] = new int[edges.length];
@@ -85,7 +85,7 @@ public class Percolator {
 							check[n] = true;
 							double arr[] = edges[n];
 							for (int j = 0; j < 4; j++) {
-								int next = n + ((j - 1) % 2) + width * ((j - 2) % 2);
+								int next = n - ((j - 1) % 2) - width * ((j - 2) % 2);
 								if (next >= 0 && next < pixels.length && !check[next] && arr[j] < p)
 									stack.push(next);
 							}
