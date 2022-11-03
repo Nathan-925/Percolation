@@ -153,11 +153,12 @@ public class Percolator {
     
     /**
      * Returns an int representing which group the given cell is a part of.
-     * The int returned is arbitrary. The only guarantee is that cells in the same group will return the same int and cells in different groups will return different ints.
+     * The int returned is arbitrary. 
+     * The only guarantee is that cells in the same group will return the same int and cells in different groups will return different ints.
      * 
-     * @param x
-     * @param y
-     * @return
+     * @param x x coordinate of the cell
+     * @param y y coordinate of the cell
+     * @return an int unique to the group the cell is in
      */
     public int getGroup(int x, int y) {
         return pixels[x+y*width];
